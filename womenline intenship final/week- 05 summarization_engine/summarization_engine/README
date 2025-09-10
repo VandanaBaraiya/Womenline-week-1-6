@@ -1,0 +1,128 @@
+# 🧠 AI Summarization Engine (Member 2)
+
+A plug-and-play FastAPI service that returns **1–3 sentence** summaries for journal text.
+You can run it locally or inside Docker. Includes unit tests, Postman collection, and a
+starter script for fine-tuning (optional).
+
+---
+
+## 📦 Quick Start (Local)
+
+```bash
+# 1) Create & activate a virtual env (recommended)
+python -m venv .venv
+source .venv/bin/activate   # on Windows: .venv\Scripts\activate
+
+# 2) Install dependencies
+pip install -r requirements.txt
+
+# 3) Run the API
+uvicorn src.main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+Open: `http://localhost:8000/docs` for Swagger UI.
+
+### Test a request (HTTPie or curl)
+```bash
+curl -X POST http://localhost:8000/summarize-journal   -H "Content-Type: application/json"   -d '{"text": "Today I wrote a long journal about my day..."}'
+```
+
+---
+
+## 🧪 Run Tests
+
+```bash
+pytest -q
+```
+
+---
+
+## 🐳 Docker (Optional)
+
+```bash
+# Build
+docker build -t summarization-engine:latest .
+
+# Run
+docker run -p 8000:8000 --env MODEL_NAME=facebook/bart-large-cnn summarization-engine:latest
+```
+
+Open `http://localhost:8000/docs`
+
+---
+
+## ⚙️ Configuration
+
+Environment variables:
+
+- `MODEL_NAME` (default: `facebook/bart-large-cnn`): any HF summarization model (e.g. `google/pegasus-xsum`, `facebook/bart-large-cnn`)
+- `MAX_SUMMARY_SENTENCES` (default: `3`): post-processing cap on sentences
+- `DEVICE` (default: auto): set `cpu` or `cuda` (auto-detects if not set)
+
+---
+
+## 📡 API
+
+### `POST /summarize-journal`
+
+**Request**
+```json
+{
+  "text": "Raw journal content goes here..."
+}
+```
+
+**Response**
+```json
+{
+  "summary": "1–3 sentence concise summary."
+}
+```
+
+### `GET /health`
+Returns `"ok"` for readiness checks.
+
+---
+
+## 🏋️ Fine-tuning (Optional)
+
+A minimal script is included at `training/finetune.py` if you have a CSV with
+columns `text` and `summary`.
+
+```bash
+# Example
+python training/finetune.py --train_csv /path/train.csv --eval_csv /path/val.csv   --model_name facebook/bart-large-cnn --output_dir ./checkpoints/bart-journal
+```
+
+Then run the API with `MODEL_NAME=./checkpoints/bart-journal`.
+
+---
+
+## 🗂 Project Structure
+
+```
+.
+├── Dockerfile
+├── Makefile
+├── README.md
+├── requirements.txt
+├── postman/
+│   └── Summarization.postman_collection.json
+├── src/
+│   ├── __init__.py
+│   ├── config.py
+│   ├── schemas.py
+│   ├── utils.py
+│   ├── summarize.py
+│   └── main.py
+├── tests/
+│   ├── test_api.py
+│   └── test_summarize.py
+└── training/
+    └── finetune.py
+```
+
+---
+
+## 🧾 License
+MIT — Do anything, no warranty.
