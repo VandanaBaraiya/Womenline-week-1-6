@@ -1,0 +1,57 @@
+{
+  "info": {
+    "name": "Summarization",
+    "_postman_id": "d7f6cbe5-3f59-4b2e-8bde-1234567890ab",
+    "description": "Postman collection for AI Summarization Engine",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8000/health",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "health"
+          ]
+        }
+      }
+    },
+    {
+      "name": "Summarize Journal",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "name": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\"text\": \"Write your long journal text here...\"}"
+        },
+        "url": {
+          "raw": "http://localhost:8000/summarize-journal",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8000",
+          "path": [
+            "summarize-journal"
+          ]
+        }
+      }
+    }
+  ]
+}
